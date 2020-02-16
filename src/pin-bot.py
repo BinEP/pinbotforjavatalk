@@ -1,4 +1,11 @@
 import discord
+import os
+
+
+print(os.environ['DISCORD_TOKEN'])
+
+
+
 client = discord.Client()
 
 
@@ -44,8 +51,8 @@ async def on_reaction_remove(reaction, user):
 			await reaction.message.unpin()
 
 
-TOKEN = 'Njc3NjM3Njc0OTY5OTg5MTUz.XkXJyw.DcbyBD_55w1AfQonULAOLZJw6QU'
-
+# TOKEN = 'Njc3NjM3Njc0OTY5OTg5MTUz.XkXJyw.DcbyBD_55w1AfQonULAOLZJw6QU'
+TOKEN = os.environ['DISCORD_TOKEN']
 
 if __name__ == '__main__':
 	client.run(TOKEN)
