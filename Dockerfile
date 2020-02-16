@@ -11,4 +11,4 @@ RUN pip install -U -r /bot-setup/requirements.txt
 COPY src/ /bot
 WORKDIR /bot
 
-CMD ["python", "pin-bot.py"]
+CMD ["python", "-u", "pin-bot.py"]
