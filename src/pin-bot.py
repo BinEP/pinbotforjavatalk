@@ -2,10 +2,10 @@ import discord
 import os
 
 
-TOKEN = os.environ['DISCORD_TOKEN']
-pinEmojiId = os.environ['PIN_EMOJI']
-votesToPinStr = os.environ['VOTES_TO_PIN']
-votesToPin = 1
+TOKEN = None
+pinEmojiId = None
+votesToPinStr = None
+votesToPin = None
 
 client = discord.Client()
 
@@ -49,30 +49,34 @@ async def on_reaction_remove(reaction, user):
 			await reaction.message.unpin()
 
 
-# TOKEN = 'Njc3NjM3Njc0OTY5OTg5MTUz.XkXJyw.DcbyBD_55w1AfQonULAOLZJw6QU'
-
-
 def discordBot() :
 	
 
-	if TOKEN == None :
+	try:
+		TOKEN = os.environ['DISCORD_TOKEN']
+	except KeyError:
 		print("No discord bot token defined for 'DISCORD_TOKEN'")
-		return
-		
-	if pinEmojiId == None :
+
+	try:
+		pinEmojiId = os.environ['PIN_EMOJI']
+	except KeyError:
 		print("No emoji has been defined for 'PIN_EMOJI'")
-		return
 
 
-	if votesToPinStr == None :
-		print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
+	try:
+		votesToPinStr = os.environ['VOTES_TO_PIN']
+	except KeyError:
+			print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
+
+	try:
+	    votesToPin = int(votesToPinStr)
+	except ValueError:
+	    #Handle the exception
+	    print('Please enter an integer for env var VOTES_TO_PIN')
+
+
+	if TOKEN == None or pinEmojiId == None or votesToPin == None or votesToPinStr == None :
 		return
-	else :
-		try:
-		    votesToPin = int(votesToPinStr)
-		except ValueError:
-		    #Handle the exception
-		    print('Please enter an integer for env var VOTES_TO_PIN')
 
 
 
