@@ -9,7 +9,6 @@ votesToPin = None
 
 client = discord.Client()
 
-
 @client.event
 async def on_ready():
 	print('Logged in as')
@@ -19,7 +18,6 @@ async def on_ready():
 
 @client.event
 async def on_server_join(server):
-
 	string = """ Just add reaction of :specialpin:, and the message pinned! Requires """
 	string += str(votesToPin)
 	string += " votes to Pin"
@@ -30,28 +28,22 @@ async def on_server_join(server):
 
 @client.event
 async def on_reaction_add(reaction, user):
-
-	print(str(reaction.emoji))
-	if (str(reaction.emoji) == pinEmojiId) :
-		print("detected pin request")
-		if (reaction.count >= votesToPin) :
-			print("Count > 0")
+	if str(reaction.emoji) == pinEmojiId:
+		print("Detected add pin request for message id %d from %s with count %d" % (reaction.message.id, user.name, reaction.count))
+		if reaction.count >= votesToPin:
 			await reaction.message.pin()
 
 
 @client.event
 async def on_reaction_remove(reaction, user):
-
-	if (str(reaction.emoji) == pinEmojiId) :
-		print("detected pin request")
-		if (reaction.count == 0) :
-			print("Count == 0")
+	if str(reaction.emoji) == pinEmojiId:
+		print("Detected remove pin request for message id %d from %s with count %d" % (reaction.message.id, user.name, reaction.count))
+		if reaction.count == 0:
 			await reaction.message.unpin()
 
 
-def discordBot() :
-	
-
+if __name__ == '__main__':
+	print("Starting discord bot...")
 	try:
 		TOKEN = os.environ['DISCORD_TOKEN']
 	except KeyError:
@@ -66,24 +58,18 @@ def discordBot() :
 	try:
 		votesToPinStr = os.environ['VOTES_TO_PIN']
 	except KeyError:
-			print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
+		print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
 
 	try:
-	    votesToPin = int(votesToPinStr)
+		votesToPin = int(votesToPinStr)
 	except ValueError:
-	    #Handle the exception
-	    print('Please enter an integer for env var VOTES_TO_PIN')
+		print('Please enter an integer for env var VOTES_TO_PIN')
 
 
 	if TOKEN == None or pinEmojiId == None or votesToPin == None or votesToPinStr == None :
-		return
-
-
-
-	# votesToPin = 1
-	# pinEmojiId = "<:test:677641023597576223>"
+		print("Terminating discord bot due to invalid environment variables")
+		exit(-1)
+	
+	print("Connecting to discord...")
 	client.run(TOKEN)
 
-if __name__ == '__main__':
-	discordBot()
-	
