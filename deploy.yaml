@@ -1,5 +1,0 @@
-discord-pin-bot:
-    image: pinbot
-    restart: always
-    environment:
-      - TOKEN=0000

@@ -2,15 +2,13 @@ import discord
 import os
 
 
-print(os.environ['DISCORD_TOKEN'])
-
-
+TOKEN = os.environ['DISCORD_TOKEN']
+pinEmojiId = os.environ['PIN_EMOJI']
+votesToPinStr = os.environ['VOTES_TO_PIN']
+votesToPin = 1
 
 client = discord.Client()
 
-
-votesToPin = 1
-pinEmojiId = "<:test:677641023597576223>"
 
 @client.event
 async def on_ready():
@@ -52,7 +50,36 @@ async def on_reaction_remove(reaction, user):
 
 
 # TOKEN = 'Njc3NjM3Njc0OTY5OTg5MTUz.XkXJyw.DcbyBD_55w1AfQonULAOLZJw6QU'
-TOKEN = os.environ['DISCORD_TOKEN']
+
+
+def discordBot() :
+	
+
+	if TOKEN == None :
+		print("No discord bot token defined for 'DISCORD_TOKEN'")
+		return
+		
+	if pinEmojiId == None :
+		print("No emoji has been defined for 'PIN_EMOJI'")
+		return
+
+
+	if votesToPinStr == None :
+		print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
+		return
+	else :
+		try:
+		    votesToPin = int(votesToPinStr)
+		except ValueError:
+		    #Handle the exception
+		    print('Please enter an integer for env var VOTES_TO_PIN')
+
+
+
+	# votesToPin = 1
+	# pinEmojiId = "<:test:677641023597576223>"
+	client.run(TOKEN)
 
 if __name__ == '__main__':
-	client.run(TOKEN)
+	discordBot()
+	
