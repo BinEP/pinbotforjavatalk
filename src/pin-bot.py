@@ -27,19 +27,29 @@ async def on_server_join(server):
 		)
 
 @client.event
-async def on_reaction_add(reaction, user):
-	if str(reaction.emoji) == pinEmojiId:
-		print("Detected add pin request for message id %d from %s with count %d" % (reaction.message.id, user.name, reaction.count))
-		if reaction.count >= votesToPin:
-			await reaction.message.pin()
+async def on_raw_reaction_add(reaction):
+
+	channel = await client.fetch_channel(reaction.channel_id)
+	message = await channel.fetch_message(reaction.message_id)
+	user = await client.fetch_user(reaction.user_id)
+
+	for eachReaction in message.reactions :
+		if str(eachReaction.emoji) == pinEmojiId:
+			print("Detected pin request for message id %d from %s with count %d" % (reaction.message_id, user.name, eachReaction.count))
+			if eachReaction.count >= votesToPin:
+				await message.pin()
 
 
 @client.event
-async def on_reaction_remove(reaction, user):
-	if str(reaction.emoji) == pinEmojiId:
-		print("Detected remove pin request for message id %d from %s with count %d" % (reaction.message.id, user.name, reaction.count))
-		if reaction.count == 0:
-			await reaction.message.unpin()
+async def on_raw_reaction_remove(reaction):
+
+	channel = await client.fetch_channel(reaction.channel_id)
+	message = await channel.fetch_message(reaction.message_id)
+	user = await client.fetch_user(reaction.user_id)
+
+	if not any(eachReaction.emoji == pinEmojiId for eachReaction in message.reactions) :
+		print("Detected remove pin request for message id %d from %s" % (reaction.message_id, user.name))
+		await message.unpin()
 
 
 if __name__ == '__main__':
