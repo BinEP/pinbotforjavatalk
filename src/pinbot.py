@@ -29,7 +29,7 @@ class Pinbot(discord.Client):
 		user = await self.fetch_user(reaction.user_id)
 		
 		if str(reaction.emoji) == self.pin_emoji_id:
-			remaining_votes = sum(eachReaction.emoji == self.pin_emoji_id for eachReaction in message.reactions)
+			remaining_votes = sum(str(eachReaction.emoji) == self.pin_emoji_id for eachReaction in message.reactions)
 			print("Detected remove pin request for message id %d from %s - %d remain" % (reaction.message_id, user.name, remaining_votes))
 			if remaining_votes <= 0:
 				print("No pin votes remain for message %d - unpinning" % reaction.message_id)
