@@ -1,4 +1,6 @@
 import discord
+from datetime import datetime
+import pytz
 
 
 class Pinbot(discord.Client):
@@ -10,6 +12,8 @@ class Pinbot(discord.Client):
 	async def on_ready(self):
 		print("Logged in as %s with id %s" % (self.user.name, self.user.id))
 		print("------")
+		current_time = datetime.today().astimezone(pytz.timezone("US/Central")).strftime("%b %d %H:%M")
+		await self.change_presence(activity=discord.Game(name="life since %s" % current_time))
 	
 	async def on_raw_reaction_add(self, reaction):
 		channel = await self.fetch_channel(reaction.channel_id)
