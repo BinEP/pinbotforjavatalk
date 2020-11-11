@@ -1,2 +1,5 @@
 */.DS_Store
 *.env
+
+.idea
+__pychache__
