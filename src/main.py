@@ -1,5 +1,13 @@
 from pinbot import Pinbot
 import os
+import signal
+
+
+def build_signal_handler(bot: Pinbot):
+	def signal_handler(sig, frame):
+		bot.close()
+	return signal_handler
+
 
 if __name__ == '__main__':
 	print("Starting discord bot...")
@@ -30,6 +38,11 @@ if __name__ == '__main__':
 		print("No threshhold for pinning has been defined for 'VOTES_TO_PIN'")
 		exit(-1)
 	
-	print("Connecting to discord...")
 	pinbot = Pinbot(pin_emoji_id=pin_emoji_id, votes_to_pin=votes_to_pin)
+	
+	print("Setting up signal handler...")
+	signal.signal(signal.SIGINT, build_signal_handler(pinbot))
+	signal.signal(signal.SIGTERM, build_signal_handler(pinbot))
+	
+	print("Connecting to discord...")
 	pinbot.run(token)

@@ -15,6 +15,11 @@ class Pinbot(discord.Client):
 		current_time = datetime.today().astimezone(pytz.timezone("US/Central")).strftime("%b %d %H:%M")
 		await self.change_presence(activity=discord.Game(name="life since %s" % current_time))
 	
+	async def close(self):
+		print("Disconnecting from discord...")
+		await self.change_presence(activity=None, status=discord.Status.offline)
+		return await super().close()
+	
 	async def on_raw_reaction_add(self, reaction):
 		channel = await self.fetch_channel(reaction.channel_id)
 		message = await channel.fetch_message(reaction.message_id)
